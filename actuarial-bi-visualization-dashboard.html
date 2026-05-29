@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 4: Visualization Frameworks for Actuarial BI</title>
+    <style>
+        :root {
+            --primary-color: #2E86C1;
+            --secondary-color: #2874A6;
+            --success-color: #27AE60;
+            --warning-color: #F39C12;
+            --danger-color: #E74C3C;
+            --light-color: #ECF0F1;
+            --dark-color: #2C3E50;
+            --text-color: #333;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            color: var(--dark-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            margin-top: 25px;
+        }
+
+        .section {
+            background: white;
+            margin: 20px 0;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .executive-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .kpi-card {
+            background: var(--light-color);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .kpi-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 10px 0;
+            color: var(--dark-color);
+        }
+
+        .kpi-label {
+            font-size: 0.9em;
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+
+        .kpi-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-success {
+            background-color: rgba(39, 174, 96, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-warning {
+            background-color: rgba(243, 156, 18, 0.1);
+            color: var(--warning-color);
+        }
+
+        .status-danger {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+        }
+
+        .insights {
+            background: #fff8e1;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin: 20px 0;
+            border-left: 5px solid var(--warning-color);
+        }
+
+        .insights ul {
+            padding-left: 20px;
+        }
+
+        .insights li {
+            margin: 10px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9em;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: var(--light-color);
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .correlation-matrix {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .matrix-cell {
+            background: var(--light-color);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .matrix-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .executive-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Section 4: Visualization Frameworks for Actuarial BI</h1>
+            <p>Professional Dashboard for Data Analytics</p>
+        </header>
+
+        <!-- Executive Summary Section -->
+        <div class="section">
+            <h2>📌 Executive Summary</h2>
+            <p>Key metrics and insights at a glance for actuarial business intelligence.</p>
+
+            <div class="executive-summary">
+                <div class="kpi-card">
+                    <div class="kpi-label">Combined Ratio</div>
+                    <div class="kpi-value" id="combined_ratio">-</div>
+                    <div class="kpi-status" id="combined_ratio_status">-</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">CLV per Customer</div>
+                    <div class="kpi-value" id="clv_per_customer">-</div>
+                    <div class="kpi-status" id="clv_status">-</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Loss Ratio (CLV)</div>
+                    <div class="kpi-value" id="loss_ratio_clv">-</div>
+                    <div class="kpi-status" id="loss_ratio_status">-</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Profit Margin</div>
+                    <div class="kpi-value" id="profit_margin">-</div>
+                    <div class="kpi-status" id="profit_margin_status">-</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Year 1 Retention</div>
+                    <div class="kpi-value" id="year1_retention">-</div>
+                    <div class="kpi-status" id="retention_status">-</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">IBNR Estimate (Mean)</div>
+                    <div class="kpi-value" id="ibnr_estimate">-</div>
+                    <div class="kpi-status" id="ibnr_status">-</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Data Quality Score</div>
+                    <div class="kpi-value" id="data_quality_score">-</div>
+                    <div class="kpi-status" id="data_quality_status">-</div>
+                </div>
+            </div>
+
+            <div class="insights">
+                <h3>🔍 Top 5 Insights</h3>
+                <ul id="insights_list">
+                    <li>Loading insights...</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Actuarial BI Metrics Section -->
+        <div class="section">
+            <h2>📈 1. Actuarial BI Metrics</h2>
+            <p>Comprehensive metrics for premium, reserve, and risk analysis.</p>
+
+            <h3>Premium Metrics</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Gross Premium</td>
+                        <td id="gross_premium">-</td>
+                    </tr>
+                    <tr>
+                        <td>Earned Premium</td>
+                        <td id="earned_premium">-</td>
+                    </tr>
+                    <tr>
+                        <td>Loss Ratio</td>
+                        <td id="loss_ratio_premium">-</td>
+                    </tr>
+                    <tr>
+                        <td>Expense Ratio</td>
+                        <td id="expense_ratio">-</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Combined Ratio</strong></td>
+                        <td id="combined_ratio_premium"><strong>-</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Premium per Exposure</td>
+                        <td id="premium_per_exposure">-</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Reserve Metrics</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Total Reserve</td>
+                        <td id="total_reserve">-</td>
+                    </tr>
+                    <tr>
+                        <td>Reserve-to-Premium Ratio</td>
+                        <td id="reserve_to_premium_ratio">-</td>
+                    </tr>
+                    <tr>
+                        <td>Adverse Deviation Margin</td>
+                        <td id="adverse_deviation_margin">-</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Risk Metrics</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Product Concentration (HHI)</td>
+                        <td id="product_concentration_hhi">-</td>
+                    </tr>
+                    <tr>
+                        <td>Geographic Concentration (HHI)</td>
+                        <td id="geographic_concentration_hhi">-</td>
+                    </tr>
+                    <tr>
+                        <td>Max Product Concentration</td>
+                        <td id="max_product_concentration">-</td>
+                    </tr>
+                    <tr>
+                        <td>Max Geographic Concentration</td>
+                        <td id="max_geographic_concentration">-</td>
+                    </tr>
+                    <tr>
+                        <td>Portfolio Volatility (Std Dev)</td>
+                        <td id="portfolio_volatility_std">-</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Data Quality Score</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Completeness Score</td>
+                        <td id="completeness_score">-</td>
+                    </tr>
+                    <tr>
+                        <td>Consistency Score</td>
+                        <td id="consistency_score">-</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Overall Quality</strong></td>
+                        <td id="overall_quality"><strong>-</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Claims Development Analysis Section -->
+        <div class="section">
+            <h2>🔄 2. Claims Development Analysis</h2>
+            <p>Development triangle, link ratios, and IBNR estimates for claims reserving.</p>
+
+            <h3>Development Triangle</h3>
+            <p>Accident Year vs. Development Month (Incurred Losses)</p>
+            <div id="development_triangle_table">
+                <p>Loading development triangle...</p>
+            </div>
+
+            <h3>Link Ratios</h3>
+            <p>Development factors between consecutive months.</p>
+            <div class="code-block" id="link_ratios">
+                Loading link ratios...
+            </div>
+
+            <h3>IBNR Estimates (Bornhuetter-Ferguson)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Origin Year</th>
+                        <th>Paid Claims</th>
+                        <th>Ultimate Claims</th>
+                        <th>IBNR</th>
+                    </tr>
+                </thead>
+                <tbody id="ibnr_estimates_table">
+                    <tr><td colspan="4">Loading IBNR estimates...</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Bootstrap Chain Ladder Results</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Mean Ultimate</td>
+                        <td id="mean_ultimate">-</td>
+                    </tr>
+                    <tr>
+                        <td>Median Ultimate</td>
+                        <td id="median_ultimate">-</td>
+                    </tr>
+                    <tr>
+                        <td>75th Percentile</td>
+                        <td id="percentile_75">-</td>
+                    </tr>
+                    <tr>
+                        <td>90th Percentile</td>
+                        <td id="percentile_90">-</td>
+                    </tr>
+                    <tr>
+                        <td>95th Percentile</td>
+                        <td id="percentile_95">-</td>
+                    </tr>
+                    <tr>
+                        <td>Standard Deviation</td>
+                        <td id="standard_deviation">-</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Customer Lifetime Value & Retention Section -->
+        <div class="section">
+            <h2>👥 3. Customer Lifetime Value & Retention</h2>
+            <p>CLV analysis, retention rates, and frequency-severity models.</p>
+
+            <h3>Customer Lifetime Value (CLV)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>CLV per Customer</td>
+                        <td id="clv_per_customer_table">-</td>
+                    </tr>
+                    <tr>
+                        <td>PV Future Premiums</td>
+                        <td id="pv_future_premiums">-</td>
+                    </tr>
+                    <tr>
+                        <td>Expected Claims Cost</td>
+                        <td id="expected_claims_cost">-</td>
+                    </tr>
+                    <tr>
+                        <td>Profit Margin per Customer</td>
+                        <td id="profit_margin_per_customer">-</td>
+                    </tr>
+                    <tr>
+                        <td>Loss Ratio (CLV)</td>
+                        <td id="loss_ratio_clv_table">-</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Cohort Retention Analysis</h3>
+            <p>Retention rates by policy year cohort.</p>
+            <div id="retention_analysis_table">
+                <p>Loading retention analysis...</p>
+            </div>
+
+            <h3>Claims Frequency-Severity Model</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Expected Frequency</td>
+                        <td id="expected_frequency">-</td>
+                    </tr>
+                    <tr>
+                        <td>Expected Severity</td>
+                        <td id="expected_severity">-</td>
+                    </tr>
+                    <tr>
+                        <td>Pure Premium (Mean)</td>
+                        <td id="pure_premium_mean">-</td>
+                    </tr>
+                    <tr>
+                        <td>Pure Premium (Std Dev)</td>
+                        <td id="pure_premium_std">-</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Correlation Matrix Section -->
+        <div class="section">
+            <h2>🔍 4. Correlation Matrix</h2>
+            <p>Correlation between key actuarial metrics (Loss Ratio, Expense Ratio, Growth Rate).</p>
+            <div id="correlation_matrix_table">
+                <p>Loading correlation matrix...</p>
+            </div>
+        </div>
+
+        <!-- Notes for Notion Integration Section -->
+        <div class="section">
+            <h2>📌 Notes for Notion Integration</h2>
+            <ol>
+                <li><strong>Dynamic Data:</strong> Replace all placeholders with actual values from your Python script.</li>
+                <li><strong>Tables:</strong> Use Notion's table blocks for structured data (e.g., development triangle, retention analysis).</li>
+                <li><strong>Visuals:</strong> Embed charts (e.g., heatmaps for correlation matrices) using Notion's <code>/chart</code> or external tools like <strong>ChartMogul</strong> or <strong>Observability</strong>.</li>
+                <li><strong>Formatting:</strong> Use Notion's <strong>toggle lists</strong> for collapsible sections (e.g., detailed metrics).</li>
+                <li><strong>Automation:</strong> Connect to a <strong>Python backend</strong> (e.g., via <strong>Make.com</strong> or <strong>Zapier</strong>) to auto-update metrics.</li>
+            </ol>
+        </div>
+
+        <!-- Technical Implementation Section -->
+        <div class="section">
+            <h2>🛠️ Technical Implementation</h2>
+            <p>To generate this dashboard in Python:</p>
+            <ol>
+                <li>Run the provided script to compute all metrics.</li>
+                <li>Use <code>pandas</code> to export tables (e.g., <code>df.to_html()</code>).</li>
+                <li>Replace placeholders in this template with the script's output.</li>
+                <li>For visuals, use libraries like <code>matplotlib</code> or <code>plotly</code> to create images and embed them in Notion.</li>
+            </ol>
+
+            <h3>Example Python Snippet for Notion Integration</h3>
+            <div class="code-block">
+# Generate the dashboard data<br>
+dashboard = ActuarialDashboard(actuarial_data, policies_df, claims_df, triangle_df)<br>
+full_report = dashboard.generate_full_dashboard()<br><br>
+# Extract values for Notion<br>
+combined_ratio = f"{full_report['executive_summary']['key_metrics']['Combined Ratio']:.2%}"<br>
+clv_per_customer = f"${full_report['clv_retention']['clv_analysis']['clv_per_customer']:,.2f}"<br>
+# ... (repeat for all placeholders)<br><br>
+# Save tables as HTML<br>
+development_triangle = full_report['claims_development']['development_triangle'].to_html()<br>
+retention_analysis = full_report['clv_retention']['retention_analysis'].to_html()
+            </div>
+        </div>
+
+        <footer>
+            <p>💡 <strong>Pro Tip:</strong> Use <strong>Notion API</strong> to automate updates directly from your Python script!</p>
+        </footer>
+    </div>
+
+    <script>
+        // Function to format numbers as currency
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(value);
+        }
+
+        // Function to format numbers as percentage
+        function formatPercentage(value) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'percent',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(value);
+        }
+
+        // Function to determine status based on value and thresholds
+        function getStatus(value, thresholds) {
+            if (value < thresholds.low) {
+                return '<span class="kpi-status status-success">✅ Good</span>';
+            } else if (value < thresholds.medium) {
+                return '<span class="kpi-status status-warning">⚠️ Warning</span>';
+            } else {
+                return '<span class="kpi-status status-danger">❌ Critical</span>';
+            }
+        }
+
+        // Function to populate the dashboard with data
+        function populateDashboard(data) {
+            // Executive Summary
+            document.getElementById('combined_ratio').textContent = formatPercentage(data.executive_summary.key_metrics['Combined Ratio']);
+            document.getElementById('combined_ratio_status').innerHTML = getStatus(
+                data.executive_summary.key_metrics['Combined Ratio'],
+                { low: 0.9, medium: 1.0 }
+            );
+
+            document.getElementById('clv_per_customer').textContent = formatCurrency(data.executive_summary.key_metrics['CLV per Customer']);
+            document.getElementById('clv_status').innerHTML = getStatus(
+                data.executive_summary.key_metrics['CLV per Customer'],
+                { low: 0, medium: 1000 }
+            );
+
+            document.getElementById('loss_ratio_clv').textContent = formatPercentage(data.executive_summary.key_metrics['Loss Ratio (CLV)']);
+            document.getElementById('loss_ratio_status').innerHTML = getStatus(
+                data.executive_summary.key_metrics['Loss Ratio (CLV)'],
+                { low: 0.5, medium: 0.8 }
+            );
+
+            document.getElementById('profit_margin').textContent = formatPercentage(data.executive_summary.key_metrics['Profit Margin']);
+            document.getElementById('profit_margin_status').innerHTML = getStatus(
+                data.executive_summary.key_metrics['Profit Margin'],
+                { low: 0.1, medium: 0.3 }
+            );
+
+            document.getElementById('year1_retention').textContent = data.executive_summary.key_metrics['Year 1 Retention'];
+            document.getElementById('retention_status').innerHTML = getStatus(
+                parseFloat(data.executive_summary.key_metrics['Year 1 Retention']),
+                { low: 0.8, medium: 0.9 }
+            );
+
+            document.getElementById('ibnr_estimate').textContent = formatCurrency(data.executive_summary.key_metrics['IBNR Estimate (Mean)']);
+            document.getElementById('ibnr_status').innerHTML = '<span class="kpi-status status-success">✅ Adequate</span>';
+
+            document.getElementById('data_quality_score').textContent = formatPercentage(data.executive_summary.key_metrics['Data Quality Score']);
+            document.getElementById('data_quality_status').innerHTML = getStatus(
+                data.executive_summary.key_metrics['Data Quality Score'],
+                { low: 0.8, medium: 0.9 }
+            );
+
+            // Insights
+            const insightsList = document.getElementById('insights_list');
+            insightsList.innerHTML = '';
+            data.executive_summary.top_insights.forEach(insight => {
+                const li = document.createElement('li');
+                li.innerHTML = insight;
+                insightsList.appendChild(li);
+            });
+
+            // Premium Metrics
+            document.getElementById('gross_premium').textContent = formatCurrency(data.bi_metrics.premium_metrics.gross_premium);
+            document.getElementById('earned_premium').textContent = formatCurrency(data.bi_metrics.premium_metrics.earned_premium);
+            document.getElementById('loss_ratio_premium').textContent = formatPercentage(data.bi_metrics.premium_metrics.loss_ratio);
+            document.getElementById('expense_ratio').textContent = formatPercentage(data.bi_metrics.premium_metrics.expense_ratio);
+            document.getElementById('combined_ratio_premium').textContent = formatPercentage(data.bi_metrics.premium_metrics.combined_ratio);
+            document.getElementById('premium_per_exposure').textContent = formatCurrency(data.bi_metrics.premium_metrics.premium_per_exposure);
+
+            // Reserve Metrics
+            document.getElementById('total_reserve').textContent = formatCurrency(data.bi_metrics.reserve_metrics.total_reserve);
+            document.getElementById('reserve_to_premium_ratio').textContent = formatPercentage(data.bi_metrics.reserve_metrics.reserve_to_premium_ratio);
+            document.getElementById('adverse_deviation_margin').textContent = formatCurrency(data.bi_metrics.reserve_metrics.adverse_deviation_margin);
+
+            // Risk Metrics
+            document.getElementById('product_concentration_hhi').textContent = formatPercentage(data.bi_metrics.risk_metrics.product_concentration_hhi);
+            document.getElementById('geographic_concentration_hhi').textContent = formatPercentage(data.bi_metrics.risk_metrics.geographic_concentration_hhi);
+            document.getElementById('max_product_concentration').textContent = formatPercentage(data.bi_metrics.risk_metrics.max_product_concentration);
+            document.getElementById('max_geographic_concentration').textContent = formatPercentage(data.bi_metrics.risk_metrics.max_geographic_concentration);
+            document.getElementById('portfolio_volatility_std').textContent = formatPercentage(data.bi_metrics.risk_metrics.portfolio_volatility_std);
+
+            // Data Quality Score
+            document.getElementById('completeness_score').textContent = formatPercentage(data.bi_metrics.data_quality_score.completeness_score);
+            document.getElementById('consistency_score').textContent = formatPercentage(data.bi_metrics.data_quality_score.consistency_score);
+            document.getElementById('overall_quality').textContent = formatPercentage(data.bi_metrics.data_quality_score.overall_quality);
+
+            // Development Triangle
+            const developmentTriangle = data.claims_development.development_triangle;
+            let triangleHTML = '<table><thead><tr><th>Accident Year</th>';
+            for (let month = 1; month <= 12; month++) {
+                triangleHTML += `<th>Month ${month}</th>`;
+            }
+            triangleHTML += '</tr></thead><tbody>';
+            for (const [year, row] of Object.entries(developmentTriangle)) {
+                triangleHTML += `<tr><td>${year}</td>`;
+                for (const month in row) {
+                    triangleHTML += `<td>${formatCurrency(row[month])}</td>`;
+                }
+                triangleHTML += '</tr>';
+            }
+            triangleHTML += '</tbody></table>';
+            document.getElementById('development_triangle_table').innerHTML = triangleHTML;
+
+            // Link Ratios
+            const linkRatios = data.claims_development.link_ratios;
+            document.getElementById('link_ratios').textContent = linkRatios.join(', ');
+
+            // IBNR Estimates
+            const ibnrEstimates = data.claims_development.ibnr_estimates;
+            let ibnrHTML = '';
+            ibnrEstimates.forEach(row => {
+                ibnrHTML += `<tr>
+                    <td>${row.origin_year}</td>
+                    <td>${formatCurrency(row.paid_claims)}</td>
+                    <td>${formatCurrency(row.ultimate_claims)}</td>
+                    <td>${formatCurrency(row.ibnr)}</td>
+                </tr>`;
+            });
+            document.getElementById('ibnr_estimates_table').innerHTML = ibnrHTML;
+
+            // Bootstrap Chain Ladder Results
+            document.getElementById('mean_ultimate').textContent = formatCurrency(data.claims_development.bootstrap_results.mean_ultimate);
+            document.getElementById('median_ultimate').textContent = formatCurrency(data.claims_development.bootstrap_results.median_ultimate);
+            document.getElementById('percentile_75').textContent = formatCurrency(data.claims_development.bootstrap_results.percentile_75);
+            document.getElementById('percentile_90').textContent = formatCurrency(data.claims_development.bootstrap_results.percentile_90);
+            document.getElementById('percentile_95').textContent = formatCurrency(data.claims_development.bootstrap_results.percentile_95);
+            document.getElementById('standard_deviation').textContent = formatCurrency(data.claims_development.bootstrap_results.standard_deviation);
+
+            // CLV Analysis
+            document.getElementById('clv_per_customer_table').textContent = formatCurrency(data.clv_retention.clv_analysis.clv_per_customer);
+            document.getElementById('pv_future_premiums').textContent = formatCurrency(data.clv_retention.clv_analysis.pv_future_premiums);
+            document.getElementById('expected_claims_cost').textContent = formatCurrency(data.clv_retention.clv_analysis.expected_claims_cost);
+            document.getElementById('profit_margin_per_customer').textContent = formatPercentage(data.clv_retention.clv_analysis.profit_margin_per_customer);
+            document.getElementById('loss_ratio_clv_table').textContent = formatPercentage(data.clv_retention.clv_analysis.loss_ratio);
+
+            // Retention Analysis
+            const retentionAnalysis = data.clv_retention.retention_analysis;
+            let retentionHTML = '<table><thead><tr>';
+            for (const key in retentionAnalysis[0]) {
+                retentionHTML += `<th>${key}</th>`;
+            }
+            retentionHTML += '</tr></thead><tbody>';
+            retentionAnalysis.forEach(row => {
+                retentionHTML += '<tr>';
+                for (const key in row) {
+                    if (key.includes('Retention')) {
+                        retentionHTML += `<td>${formatPercentage(row[key])}</td>`;
+                    } else {
+                        retentionHTML += `<td>${row[key]}</td>`;
+                    }
+                }
+                retentionHTML += '</tr>';
+            });
+            retentionHTML += '</tbody></table>';
+            document.getElementById('retention_analysis_table').innerHTML = retentionHTML;
+
+            // Frequency-Severity Model
+            document.getElementById('expected_frequency').textContent = data.clv_retention.frequency_severity_model.expected_frequency.toFixed(2);
+            document.getElementById('expected_severity').textContent = formatCurrency(data.clv_retention.frequency_severity_model.expected_severity);
+            document.getElementById('pure_premium_mean').textContent = formatCurrency(data.clv_retention.frequency_severity_model.pure_premium_mean);
+            document.getElementById('pure_premium_std').textContent = formatCurrency(data.clv_retention.frequency_severity_model.pure_premium_std);
+
+            // Correlation Matrix
+            const correlationMatrix = data.bi_metrics.risk_metrics.correlation_matrix;
+            let matrixHTML = '<div class="correlation-matrix"><div class="matrix-header"></div>';
+            const headers = ['', 'Loss Ratio', 'Expense Ratio', 'Growth Rate'];
+            for (let i = 0; i < headers.length; i++) {
+                if (i === 0) {
+                    matrixHTML += `<div class="matrix-header">${headers[i]}</div>`;
+                } else {
+                    matrixHTML += `<div class="matrix-header">${headers[i]}</div>`;
+                }
+            }
+            for (let i = 0; i < headers.length - 1; i++) {
+                matrixHTML += `<div class="matrix-header">${headers[i + 1]}</div>`;
+                for (let j = 0; j < headers.length - 1; j++) {
+                    const value = correlationMatrix[Object.keys(correlationMatrix)[i]][Object.keys(correlationMatrix)[j]];
+                    matrixHTML += `<div class="matrix-cell">${value.toFixed(2)}</div>`;
+                }
+            }
+            matrixHTML += '</div>';
+            document.getElementById('correlation_matrix_table').innerHTML = matrixHTML;
+        }
+
+        // Fetch data from Python backend (simulated here)
+        // In a real scenario, you would fetch this from your Python script
+        // For now, we'll simulate it with a placeholder
+        window.addEventListener('load', function() {
+            // This is a placeholder for the actual data
+            // In a real implementation, you would fetch this from your Python backend
+            const simulatedData = {
+                "executive_summary": {
+                    "key_metrics": {
+                        "Combined Ratio": 0.95,
+                        "CLV per Customer": 2500.50,
+                        "Loss Ratio (CLV)": 0.65,
+                        "Profit Margin": 0.25,
+                        "Year 1 Retention": "85.0%",
+                        "IBNR Estimate (Mean)": 1500000.00,
+                        "Data Quality Score": 0.92
+                    },
+                    "top_insights": [
+                        "✅ Combined ratio is 95.00%. Profitable portfolio.",
+                        "✅ Reserve-to-premium ratio is 30.00%. Adequate reserves.",
+                        "✅ Loss ratio is 65.00% (acceptable).",
+                        "✅ Excellent Year 1 retention (85.0%).",
+                        "✅ Current reserves appear adequate based on IBNR estimates."
+                    ]
+                },
+                "bi_metrics": {
+                    "premium_metrics": {
+                        "gross_premium": 25000000.00,
+                        "earned_premium": 22000000.00,
+                        "loss_ratio": 0.65,
+                        "expense_ratio": 0.20,
+                        "combined_ratio": 0.95,
+                        "premium_per_exposure": 500.00
+                    },
+                    "reserve_metrics": {
+                        "total_reserve": 7500000.00,
+                        "reserve_to_premium_ratio": 0.30,
+                        "adverse_deviation_margin": 750000.00
+                    },
+                    "risk_metrics": {
+                        "product_concentration_hhi": 0.25,
+                        "geographic_concentration_hhi": 0.20,
+                        "max_product_concentration": 0.40,
+                        "max_geographic_concentration": 0.35,
+                        "portfolio_volatility_std": 0.15,
+                        "correlation_matrix": {
+                            "loss_ratio": {"loss_ratio": 1.0, "expense_ratio": -0.3, "growth_rate": 0.2},
+                            "expense_ratio": {"loss_ratio": -0.3, "expense_ratio": 1.0, "growth_rate": -0.1},
+                            "growth_rate": {"loss_ratio": 0.2, "expense_ratio": -0.1, "growth_rate": 1.0}
+                        }
+                    },
+                    "data_quality_score": {
+                        "completeness_score": 0.95,
+                        "consistency_score": 0.90,
+                        "overall_quality": 0.92
+                    }
+                },
+                "claims_development": {
+                    "development_triangle": {
+                        "2020": {"1": 120000, "2": 130000, "3": 140000, "4": 150000, "5": 160000, "6": 170000, "7": 180000, "8": 190000, "9": 200000, "10": 210000, "11": 220000, "12": 230000},
+                        "2021": {"1": 130000, "2": 140000, "3": 150000, "4": 160000, "5": 170000, "6": 180000, "7": 190000, "8": 200000, "9": 210000, "10": 220000, "11": 230000, "12": 240000},
+                        "2022": {"1": 140000, "2": 150000, "3": 160000, "4": 170000, "5": 180000, "6": 190000, "7": 200000, "8": 210000, "9": 220000, "10": 230000, "11": 240000, "12": 250000},
+                        "2023": {"1": 150000, "2": 160000, "3": 170000, "4": 180000, "5": 190000, "6": 200000, "7": 210000, "8": 220000, "9": 230000, "10": 240000, "11": 250000, "12": 260000},
+                        "2024": {"1": 160000, "2": 170000, "3": 180000, "4": 190000, "5": 200000, "6": 210000, "7": 220000, "8": 230000, "9": 240000, "10": 250000, "11": 260000, "12": 270000}
+                    },
+                    "link_ratios": [1.08, 1.07, 1.06, 1.05, 1.04, 1.03, 1.02, 1.01, 1.00, 0.99, 0.98, 1.05],
+                    "ibnr_estimates": [
+                        {"origin_year": 2020, "paid_claims": 230000, "ultimate_claims": 250000, "ibnr": 13000},
+                        {"origin_year": 2021, "paid_claims": 240000, "ultimate_claims": 260000, "ibnr": 15600},
+                        {"origin_year": 2022, "paid_claims": 250000, "ultimate_claims": 270000, "ibnr": 18200},
+                        {"origin_year": 2023, "paid_claims": 260000, "ultimate_claims": 280000, "ibnr": 20800},
+                        {"origin_year": 2024, "paid_claims": 270000, "ultimate_claims": 290000, "ibnr": 23400}
+                    ],
+                    "bootstrap_results": {
+                        "mean_ultimate": 1500000.00,
+                        "median_ultimate": 1480000.00,
+                        "percentile_75": 1550000.00,
+                        "percentile_90": 1600000.00,
+                        "percentile_95": 1650000.00,
+                        "standard_deviation": 100000.00
+                    }
+                },
+                "clv_retention": {
+                    "clv_analysis": {
+                        "clv_per_customer": 2500.50,
+                        "pv_future_premiums": 5000.00,
+                        "expected_claims_cost": 2500.00,
+                        "profit_margin_per_customer": 0.25,
+                        "loss_ratio": 0.65
+                    },
+                    "retention_analysis": [
+                        {"Cohort": 2020, "Initial Count": 500, "Year 1 Retention": 0.85, "Year 2 Retention": 0.75, "Year 3 Retention": 0.65, "Year 4 Retention": 0.55},
+                        {"Cohort": 2021, "Initial Count": 600, "Year 1 Retention": 0.88, "Year 2 Retention": 0.78, "Year 3 Retention": 0.68, "Year 4 Retention": 0.58},
+                        {"Cohort": 2022, "Initial Count": 700, "Year 1 Retention": 0.90, "Year 2 Retention": 0.80, "Year 3 Retention": 0.70, "Year 4 Retention": 0.60},
+                        {"Cohort": 2023, "Initial Count": 800, "Year 1 Retention": 0.92, "Year 2 Retention": 0.82, "Year 3 Retention": 0.72, "Year 4 Retention": 0.62},
+                        {"Cohort": 2024, "Initial Count": 400, "Year 1 Retention": 0.80, "Year 2 Retention": 0.70, "Year 3 Retention": 0.60, "Year 4 Retention": 0.50}
+                    ],
+                    "frequency_severity_model": {
+                        "expected_frequency": 1.5,
+                        "expected_severity": 2500.00,
+                        "pure_premium_mean": 3750.00,
+                        "pure_premium_std": 500.00
+                    }
+                }
+            };
+
+            // Populate the dashboard with simulated data
+            populateDashboard(simulatedData);
+        });
+    </script>
+</body>
+</html>
