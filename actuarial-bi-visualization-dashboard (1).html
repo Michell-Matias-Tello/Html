@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 4: Visualization Frameworks for Actuarial BI</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <style>
+        :root {
+            --primary-color: #2E86AB;
+            --secondary-color: #A23B72;
+            --accent-color: #F18F01;
+            --light-color: #E8F1F5;
+            --dark-color: #1E3D58;
+            --success-color: #28A745;
+            --warning-color: #FFC107;
+            --danger-color: #DC3545;
+            --text-color: #333;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+
+        h2 {
+            color: var(--dark-color);
+            font-size: 1.8em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            font-size: 1.4em;
+            margin-top: 25px;
+        }
+
+        .section {
+            background: white;
+            margin: 20px 0;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .kpi-card {
+            background: linear-gradient(135deg, var(--light-color), white);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .kpi-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 10px 0;
+        }
+
+        .kpi-label {
+            font-size: 0.9em;
+            color: var(--dark-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .kpi-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .status-success {
+            background-color: rgba(40, 167, 69, 0.2);
+            color: var(--success-color);
+        }
+
+        .status-warning {
+            background-color: rgba(255, 193, 7, 0.2);
+            color: var(--warning-color);
+        }
+
+        .status-danger {
+            background-color: rgba(220, 53, 69, 0.2);
+            color: var(--danger-color);
+        }
+
+        .insights {
+            background: #f8f9fa;
+            padding: 15px;
+            border-left: 4px solid var(--accent-color);
+            margin: 15px 0;
+            border-radius: var(--border-radius);
+        }
+
+        .insights ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .insights li {
+            margin-bottom: 8px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9em;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #e9ecef;
+        }
+
+        .correlation-matrix {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: #ddd;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .matrix-cell {
+            background: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .matrix-header {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .matrix-value {
+            background: linear-gradient(to right, var(--light-color), white);
+        }
+
+        .matrix-diagonal {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .correlation-matrix {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Section 4: Visualization Frameworks for Actuarial BI</h1>
+            <p style="margin: 10px 0 0 0; font-size: 1.1em;">Professional Dashboard for Data Analytics</p>
+        </header>
+
+        <!-- Executive Summary Section -->
+        <div class="section">
+            <h2>📈 Executive Dashboard Overview</h2>
+            <p>Key metrics and insights for Actuarial Business Intelligence visualization frameworks.</p>
+            
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-label">Combined Ratio</div>
+                    <div class="kpi-value" id="combined-ratio">--%</div>
+                    <div class="kpi-status status-success" id="combined-ratio-status">✅ Profitable</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">CLV per Customer</div>
+                    <div class="kpi-value" id="clv-per-customer">$--</div>
+                    <div class="kpi-status status-success" id="clv-status">✅ Positive</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Loss Ratio (CLV)</div>
+                    <div class="kpi-value" id="loss-ratio-clv">--%</div>
+                    <div class="kpi-status status-warning" id="loss-ratio-status">⚠️ Acceptable</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Profit Margin</div>
+                    <div class="kpi-value" id="profit-margin">--%</div>
+                    <div class="kpi-status status-success" id="profit-margin-status">✅ High</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Year 1 Retention</div>
+                    <div class="kpi-value" id="year1-retention">--%</div>
+                    <div class="kpi-status status-success" id="retention-status">✅ Excellent</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">IBNR Estimate</div>
+                    <div class="kpi-value" id="ibnr-estimate">$--</div>
+                    <div class="kpi-status status-success" id="ibnr-status">✅ Adequate</div>
+                </div>
+            </div>
+
+            <div class="insights">
+                <h3>🔍 Top Insights</h3>
+                <ul id="top-insights">
+                    <li>Loading insights...</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Actuarial BI Metrics Section -->
+        <div class="section">
+            <h2>📊 Actuarial BI Metrics & Analytics</h2>
+            
+            <h3>Premium Performance Metrics</h3>
+            <div class="chart-container">
+                <canvas id="premiumMetricsChart"></canvas>
+            </div>
+            
+            <h3>Reserve Adequacy Analysis</h3>
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-label">Total Reserve</div>
+                    <div class="kpi-value" id="total-reserve">$--</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Reserve-to-Premium Ratio</div>
+                    <div class="kpi-value" id="reserve-to-premium-ratio">--%</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Adverse Deviation Margin</div>
+                    <div class="kpi-value" id="adverse-deviation-margin">$--</div>
+                </div>
+            </div>
+
+            <h3>Risk Concentration Analysis</h3>
+            <div class="chart-container">
+                <canvas id="riskConcentrationChart"></canvas>
+            </div>
+            
+            <h3>Data Quality Assessment</h3>
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-label">Completeness Score</div>
+                    <div class="kpi-value" id="completeness-score">--%</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Consistency Score</div>
+                    <div class="kpi-value" id="consistency-score">--%</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Overall Quality</div>
+                    <div class="kpi-value" id="overall-quality">--%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Claims Development Section -->
+        <div class="section">
+            <h2>🔄 Claims Development & Reserving</h2>
+            
+            <h3>Development Triangle Visualization</h3>
+            <div class="chart-container">
+                <canvas id="developmentTriangleChart"></canvas>
+            </div>
+            
+            <h3>Link Ratios Analysis</h3>
+            <div class="chart-container">
+                <canvas id="linkRatiosChart"></canvas>
+            </div>
+            
+            <h3>IBNR Estimates (Bornhuetter-Ferguson)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Origin Year</th>
+                        <th>Paid Claims</th>
+                        <th>Ultimate Claims</th>
+                        <th>IBNR</th>
+                    </tr>
+                </thead>
+                <tbody id="ibnr-table">
+                    <tr><td colspan="4">Loading data...</td></tr>
+                </tbody>
+            </table>
+            
+            <h3>Bootstrap Chain Ladder Results</h3>
+            <div class="chart-container">
+                <canvas id="bootstrapResultsChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Customer Analytics Section -->
+        <div class="section">
+            <h2>👥 Customer Lifetime Value & Retention</h2>
+            
+            <h3>CLV Analysis</h3>
+            <div class="chart-container">
+                <canvas id="clvChart"></canvas>
+            </div>
+            
+            <h3>Cohort Retention Analysis</h3>
+            <div class="chart-container">
+                <canvas id="retentionChart"></canvas>
+            </div>
+            
+            <h3>Claims Frequency-Severity Model</h3>
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-label">Expected Frequency</div>
+                    <div class="kpi-value" id="expected-frequency">--</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Expected Severity</div>
+                    <div class="kpi-value" id="expected-severity">$--</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Pure Premium (Mean)</div>
+                    <div class="kpi-value" id="pure-premium-mean">$--</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Pure Premium (Std Dev)</div>
+                    <div class="kpi-value" id="pure-premium-std">$--</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Correlation Matrix Section -->
+        <div class="section">
+            <h2>🔗 Correlation Analysis</h2>
+            <p>Correlation matrix between key actuarial metrics (Loss Ratio, Expense Ratio, Growth Rate).</p>
+            
+            <div class="correlation-matrix" id="correlation-matrix">
+                <div class="matrix-cell matrix-header"></div>
+                <div class="matrix-cell matrix-header">Loss Ratio</div>
+                <div class="matrix-cell matrix-header">Expense Ratio</div>
+                <div class="matrix-cell matrix-header">Growth Rate</div>
+                
+                <div class="matrix-cell matrix-header">Loss Ratio</div>
+                <div class="matrix-cell matrix-diagonal">1.00</div>
+                <div class="matrix-cell matrix-value" id="corr-loss-expense">--</div>
+                <div class="matrix-cell matrix-value" id="corr-loss-growth">--</div>
+                
+                <div class="matrix-cell matrix-header">Expense Ratio</div>
+                <div class="matrix-cell matrix-value" id="corr-expense-loss">--</div>
+                <div class="matrix-cell matrix-diagonal">1.00</div>
+                <div class="matrix-cell matrix-value" id="corr-expense-growth">--</div>
+                
+                <div class="matrix-cell matrix-header">Growth Rate</div>
+                <div class="matrix-cell matrix-value" id="corr-growth-loss">--</div>
+                <div class="matrix-cell matrix-value" id="corr-growth-expense">--</div>
+                <div class="matrix-cell matrix-diagonal">1.00</div>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="correlationHeatmap"></canvas>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Generated with Python | Data Visualization Frameworks for Actuarial BI | Notion Integration Ready</p>
+        </div>
+    </div>
+
+    <script>
+        // Sample data - Replace with actual data from your Python script
+        const sampleData = {
+            executive_summary: {
+                key_metrics: {
+                    'Combined Ratio': 0.85,
+                    'CLV per Customer': 12500.50,
+                    'Loss Ratio (CLV)': 0.65,
+                    'Profit Margin': 0.35,
+                    'Year 1 Retention': 0.92,
+                    'IBNR Estimate (Mean)': 1500000,
+                    'Data Quality Score': 0.95
+                },
+                top_insights: [
+                    "✅ Combined ratio is 85.0%. Profitable portfolio.",
+                    "✅ Reserve-to-premium ratio is 35.0%. Adequate reserves.",
+                    "✅ Low loss ratio (65.0%). Excellent profitability.",
+                    "✅ Excellent Year 1 retention (92.0%).",
+                    "✅ High profit margin (35.0%). Consider expansion."
+                ]
+            },
+            bi_metrics: {
+                premium_metrics: {
+                    gross_premium: 25000000,
+                    earned_premium: 22000000,
+                    loss_ratio: 0.65,
+                    expense_ratio: 0.20,
+                    combined_ratio: 0.85,
+                    premium_per_exposure: 1250.50
+                },
+                reserve_metrics: {
+                    total_reserve: 8500000,
+                    reserve_to_premium_ratio: 0.35,
+                    adverse_deviation_margin: 850000
+                },
+                risk_metrics: {
+                    product_concentration_hhi: 0.25,
+                    geographic_concentration_hhi: 0.20,
+                    max_product_concentration: 0.30,
+                    max_geographic_concentration: 0.25,
+                    portfolio_volatility_std: 0.15,
+                    correlation_matrix: {
+                        loss_ratio: { loss_ratio: 1.0, expense_ratio: -0.3, growth_rate: 0.2 },
+                        expense_ratio: { loss_ratio: -0.3, expense_ratio: 1.0, growth_rate: -0.1 },
+                        growth_rate: { loss_ratio: 0.2, expense_ratio: -0.1, growth_rate: 1.0 }
+                    }
+                },
+                data_quality_score: {
+                    completeness_score: 0.98,
+                    consistency_score: 0.92,
+                    overall_quality: 0.95
+                }
+            },
+            claims_development: {
+                development_triangle: {
+                    labels: ['2020', '2021', '2022', '2023', '2024'],
+                    datasets: [
+                        { label: 'Month 1', data: [100000, 120000, 140000, 160000, 180000] },
+                        { label: 'Month 2', data: [150000, 180000, 210000, 240000, 270000] },
+                        { label: 'Month 3', data: [200000, 240000, 280000, 320000, 360000] },
+                        { label: 'Month 6', data: [300000, 360000, 420000, 480000, 540000] },
+                        { label: 'Month 12', data: [400000, 480000, 560000, 640000, 720000] }
+                    ]
+                },
+                link_ratios: [1.2, 1.15, 1.1, 1.05, 1.05],
+                ibnr_estimates: [
+                    { origin_year: 2020, paid_claims: 400000, ultimate_claims: 500000, ibnr: 100000 },
+                    { origin_year: 2021, paid_claims: 480000, ultimate_claims: 600000, ibnr: 120000 },
+                    { origin_year: 2022, paid_claims: 560000, ultimate_claims: 700000, ibnr: 140000 },
+                    { origin_year: 2023, paid_claims: 640000, ultimate_claims: 800000, ibnr: 160000 },
+                    { origin_year: 2024, paid_claims: 720000, ultimate_claims: 900000, ibnr: 180000 }
+                ],
+                bootstrap_results: {
+                    mean_ultimate: 1500000,
+                    median_ultimate: 1450000,
+                    percentile_75: 1600000,
+                    percentile_90: 1750000,
+                    percentile_95: 1800000,
+                    standard_deviation: 150000
+                }
+            },
+            clv_retention: {
+                clv_analysis: {
+                    clv_per_customer: 12500.50,
+                    pv_future_premiums: 20000.00,
+                    expected_claims_cost: 7500.00,
+                    profit_margin_per_customer: 0.35,
+                    loss_ratio: 0.65
+                },
+                retention_analysis: {
+                    labels: ['2020', '2021', '2022', '2023', '2024'],
+                    datasets: [
+                        { label: 'Year 1 Retention', data: [0.85, 0.88, 0.90, 0.92, 0.95] },
+                        { label: 'Year 2 Retention', data: [0.75, 0.80, 0.85, 0.88, 0.90] },
+                        { label: 'Year 3 Retention', data: [0.65, 0.70, 0.75, 0.80, 0.85] },
+                        { label: 'Year 4 Retention', data: [0.55, 0.60, 0.65, 0.70, 0.75] }
+                    ]
+                },
+                frequency_severity_model: {
+                    expected_frequency: 1.25,
+                    expected_severity: 3500.00,
+                    pure_premium_mean: 4375.00,
+                    pure_premium_std: 875.00
+                }
+            }
+        };
+
+        // Function to format currency
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value);
+        }
+
+        // Function to format percentage
+        function formatPercentage(value) {
+            return (value * 100).toFixed(1) + '%';
+        }
+
+        // Function to format number
+        function formatNumber(value, decimals = 2) {
+            return value.toFixed(decimals);
+        }
+
+        // Populate Executive Summary
+        function populateExecutiveSummary() {
+            const metrics = sampleData.executive_summary.key_metrics;
+            
+            document.getElementById('combined-ratio').textContent = formatPercentage(metrics['Combined Ratio']);
+            document.getElementById('clv-per-customer').textContent = formatCurrency(metrics['CLV per Customer']);
+            document.getElementById('loss-ratio-clv').textContent = formatPercentage(metrics['Loss Ratio (CLV)']);
+            document.getElementById('profit-margin').textContent = formatPercentage(metrics['Profit Margin']);
+            document.getElementById('year1-retention').textContent = formatPercentage(metrics['Year 1 Retention']);
+            document.getElementById('ibnr-estimate').textContent = formatCurrency(metrics['IBNR Estimate (Mean)']);
+
+            // Update status badges
+            const combinedRatio = metrics['Combined Ratio'];
+            const clv = metrics['CLV per Customer'];
+            const lossRatio = metrics['Loss Ratio (CLV)'];
+            const profitMargin = metrics['Profit Margin'];
+            const retention = metrics['Year 1 Retention'];
+
+            document.getElementById('combined-ratio-status').textContent = combinedRatio > 1.0 ? '⚠️ Unprofitable' : combinedRatio > 0.9 ? '⚠️ Break-even' : '✅ Profitable';
+            document.getElementById('combined-ratio-status').className = combinedRatio > 1.0 ? 'kpi-status status-danger' : combinedRatio > 0.9 ? 'kpi-status status-warning' : 'kpi-status status-success';
+
+            document.getElementById('clv-status').textContent = clv < 0 ? '⚠️ Negative' : '✅ Positive';
+            document.getElementById('clv-status').className = clv < 0 ? 'kpi-status status-danger' : 'kpi-status status-success';
+
+            document.getElementById('loss-ratio-status').textContent = lossRatio > 0.8 ? '⚠️ High' : lossRatio > 0.5 ? '✅ Acceptable' : '✅ Low';
+            document.getElementById('loss-ratio-status').className = lossRatio > 0.8 ? 'kpi-status status-danger' : lossRatio > 0.5 ? 'kpi-status status-warning' : 'kpi-status status-success';
+
+            document.getElementById('profit-margin-status').textContent = profitMargin > 0.3 ? '✅ High' : profitMargin < 0 ? '⚠️ Negative' : '✅ Good';
+            document.getElementById('profit-margin-status').className = profitMargin > 0.3 ? 'kpi-status status-success' : profitMargin < 0 ? 'kpi-status status-danger' : 'kpi-status status-success';
+
+            document.getElementById('retention-status').textContent = retention >= 0.9 ? '✅ Excellent' : retention >= 0.8 ? '✅ Good' : '⚠️ Low';
+            document.getElementById('retention-status').className = retention >= 0.9 ? 'kpi-status status-success' : retention >= 0.8 ? 'kpi-status status-success' : 'kpi-status status-warning';
+
+            document.getElementById('ibnr-status').textContent = '✅ Adequate';
+            document.getElementById('ibnr-status').className = 'kpi-status status-success';
+
+            // Populate insights
+            const insightsList = document.getElementById('top-insights');
+            insightsList.innerHTML = '';
+            sampleData.executive_summary.top_insights.forEach(insight => {
+                const li = document.createElement('li');
+                li.textContent = insight;
+                insightsList.appendChild(li);
+            });
+        }
+
+        // Populate BI Metrics
+        function populateBIMetrics() {
+            const premiumMetrics = sampleData.bi_metrics.premium_metrics;
+            const reserveMetrics = sampleData.bi_metrics.reserve_metrics;
+            const dataQuality = sampleData.bi_metrics.data_quality_score;
+
+            document.getElementById('total-reserve').textContent = formatCurrency(reserveMetrics.total_reserve);
+            document.getElementById('reserve-to-premium-ratio').textContent = formatPercentage(reserveMetrics.reserve_to_premium_ratio);
+            document.getElementById('adverse-deviation-margin').textContent = formatCurrency(reserveMetrics.adverse_deviation_margin);
+
+            document.getElementById('completeness-score').textContent = formatPercentage(dataQuality.completeness_score);
+            document.getElementById('consistency-score').textContent = formatPercentage(dataQuality.consistency_score);
+            document.getElementById('overall-quality').textContent = formatPercentage(dataQuality.overall_quality);
+
+            // Premium Metrics Chart
+            const premiumCtx = document.getElementById('premiumMetricsChart').getContext('2d');
+            new Chart(premiumCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Gross Premium', 'Earned Premium', 'Premium per Exposure'],
+                    datasets: [{
+                        label: 'Amount (USD)',
+                        data: [premiumMetrics.gross_premium, premiumMetrics.earned_premium, premiumMetrics.premium_per_exposure * 1000],
+                        backgroundColor: [
+                            'rgba(46, 134, 171, 0.7)',
+                            'rgba(162, 59, 114, 0.7)',
+                            'rgba(241, 143, 1, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(46, 134, 171, 1)',
+                            'rgba(162, 59, 114, 1)',
+                            'rgba(241, 143, 1, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return '$' + context.parsed.y.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Risk Concentration Chart
+            const riskCtx = document.getElementById('riskConcentrationChart').getContext('2d');
+            new Chart(riskCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Product Concentration (HHI)', 'Geographic Concentration (HHI)', 'Max Product Concentration', 'Max Geographic Concentration'],
+                    datasets: [{
+                        data: [
+                            sampleData.bi_metrics.risk_metrics.product_concentration_hhi * 100,
+                            sampleData.bi_metrics.risk_metrics.geographic_concentration_hhi * 100,
+                            sampleData.bi_metrics.risk_metrics.max_product_concentration * 100,
+                            sampleData.bi_metrics.risk_metrics.max_geographic_concentration * 100
+                        ],
+                        backgroundColor: [
+                            'rgba(46, 134, 171, 0.7)',
+                            'rgba(162, 59, 114, 0.7)',
+                            'rgba(241, 143, 1, 0.7)',
+                            'rgba(220, 53, 69, 0.7)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + formatPercentage(context.parsed / 100);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Populate Claims Development
+        function populateClaimsDevelopment() {
+            const triangleData = sampleData.claims_development.development_triangle;
+            const linkRatios = sampleData.claims_development.link_ratios;
+            const ibnrEstimates = sampleData.claims_development.ibnr_estimates;
+            const bootstrapResults = sampleData.claims_development.bootstrap_results;
+
+            // Development Triangle Chart
+            const triangleCtx = document.getElementById('developmentTriangleChart').getContext('2d');
+            const datasets = triangleData.datasets.map((dataset, index) => ({
+                label: dataset.label,
+                data: dataset.data,
+                borderColor: `hsl(${index * 60}, 75%, 50%)`,
+                backgroundColor: `hsla(${index * 60}, 75%, 50%, 0.2)`,
+                tension: 0.1,
+                fill: false
+            }));
+
+            new Chart(triangleCtx, {
+                type: 'line',
+                data: {
+                    labels: triangleData.labels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + (value / 1000) + 'K';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return '$' + context.parsed.y.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Link Ratios Chart
+            const linkRatiosCtx = document.getElementById('linkRatiosChart').getContext('2d');
+            new Chart(linkRatiosCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Month 1-2', 'Month 2-3', 'Month 3-6', 'Month 6-12', 'Tail Factor'],
+                    datasets: [{
+                        label: 'Link Ratio',
+                        data: linkRatios,
+                        backgroundColor: 'rgba(46, 134, 171, 0.7)',
+                        borderColor: 'rgba(46, 134, 171, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // IBNR Table
+            const ibnrTable = document.getElementById('ibnr-table');
+            ibnrTable.innerHTML = ibnrEstimates.map(estimate => `
+                <tr>
+                    <td>${estimate.origin_year}</td>
+                    <td>${formatCurrency(estimate.paid_claims)}</td>
+                    <td>${formatCurrency(estimate.ultimate_claims)}</td>
+                    <td>${formatCurrency(estimate.ibnr)}</td>
+                </tr>
+            `).join('');
+
+            // Bootstrap Results Chart
+            const bootstrapCtx = document.getElementById('bootstrapResultsChart').getContext('2d');
+            new Chart(bootstrapCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Mean Ultimate', 'Median Ultimate', '75th Percentile', '90th Percentile', '95th Percentile'],
+                    datasets: [{
+                        label: 'Amount (USD)',
+                        data: [
+                            bootstrapResults.mean_ultimate,
+                            bootstrapResults.median_ultimate,
+                            bootstrapResults.percentile_75,
+                            bootstrapResults.percentile_90,
+                            bootstrapResults.percentile_95
+                        ],
+                        backgroundColor: [
+                            'rgba(46, 134, 171, 0.7)',
+                            'rgba(162, 59, 114, 0.7)',
+                            'rgba(241, 143, 1, 0.7)',
+                            'rgba(220, 53, 69, 0.7)',
+                            'rgba(40, 167, 69, 0.7)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + (value / 1000000) + 'M';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return '$' + context.parsed.y.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Populate Customer Analytics
+        function populateCustomerAnalytics() {
+            const clvAnalysis = sampleData.clv_retention.clv_analysis;
+            const retentionAnalysis = sampleData.clv_retention.retention_analysis;
+            const frequencySeverity = sampleData.clv_retention.frequency_severity_model;
+
+            // CLV Chart
+            const clvCtx = document.getElementById('clvChart').getContext('2d');
+            new Chart(clvCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['PV Future Premiums', 'Expected Claims Cost', 'CLV per Customer'],
+                    datasets: [{
+                        data: [clvAnalysis.pv_future_premiums, clvAnalysis.expected_claims_cost, clvAnalysis.clv_per_customer],
+                        backgroundColor: [
+                            'rgba(46, 134, 171, 0.7)',
+                            'rgba(220, 53, 69, 0.7)',
+                            'rgba(40, 167, 69, 0.7)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + formatCurrency(context.parsed);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Retention Chart
+            const retentionCtx = document.getElementById('retentionChart').getContext('2d');
+            const datasets = retentionAnalysis.datasets.map((dataset, index) => ({
+                label: dataset.label,
+                data: dataset.data,
+                borderColor: `hsl(${index * 90}, 75%, 50%)`,
+                backgroundColor: `hsla(${index * 90}, 75%, 50%, 0.2)`,
+                tension: 0.1
+            }));
+
+            new Chart(retentionCtx, {
+                type: 'line',
+                data: {
+                    labels: retentionAnalysis.labels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 1,
+                            ticks: {
+                                callback: function(value) {
+                                    return (value * 100) + '%';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + formatPercentage(context.parsed.y);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Frequency-Severity Metrics
+            document.getElementById('expected-frequency').textContent = formatNumber(frequencySeverity.expected_frequency);
+            document.getElementById('expected-severity').textContent = formatCurrency(frequencySeverity.expected_severity);
+            document.getElementById('pure-premium-mean').textContent = formatCurrency(frequencySeverity.pure_premium_mean);
+            document.getElementById('pure-premium-std').textContent = formatCurrency(frequencySeverity.pure_premium_std);
+        }
+
+        // Populate Correlation Matrix
+        function populateCorrelationMatrix() {
+            const corrMatrix = sampleData.bi_metrics.risk_metrics.correlation_matrix;
+
+            document.getElementById('corr-loss-expense').textContent = corrMatrix.loss_ratio.expense_ratio;
+            document.getElementById('corr-loss-growth').textContent = corrMatrix.loss_ratio.growth_rate;
+            document.getElementById('corr-expense-loss').textContent = corrMatrix.expense_ratio.loss_ratio;
+            document.getElementById('corr-expense-growth').textContent = corrMatrix.expense_ratio.growth_rate;
+            document.getElementById('corr-growth-loss').textContent = corrMatrix.growth_rate.loss_ratio;
+            document.getElementById('corr-growth-expense').textContent = corrMatrix.growth_rate.expense_ratio;
+
+            // Correlation Heatmap
+            const heatmapCtx = document.getElementById('correlationHeatmap').getContext('2d');
+            new Chart(heatmapCtx, {
+                type: 'heatmap',
+                data: {
+                    labels: ['Loss Ratio', 'Expense Ratio', 'Growth Rate'],
+                    datasets: [{
+                        label: 'Correlation',
+                        data: [
+                            { x: 'Loss Ratio', y: 'Loss Ratio', v: 1.0 },
+                            { x: 'Loss Ratio', y: 'Expense Ratio', v: corrMatrix.loss_ratio.expense_ratio },
+                            { x: 'Loss Ratio', y: 'Growth Rate', v: corrMatrix.loss_ratio.growth_rate },
+                            { x: 'Expense Ratio', y: 'Loss Ratio', v: corrMatrix.expense_ratio.loss_ratio },
+                            { x: 'Expense Ratio', y: 'Expense Ratio', v: 1.0 },
+                            { x: 'Expense Ratio', y: 'Growth Rate', v: corrMatrix.expense_ratio.growth_rate },
+                            { x: 'Growth Rate', y: 'Loss Ratio', v: corrMatrix.growth_rate.loss_ratio },
+                            { x: 'Growth Rate', y: 'Expense Ratio', v: corrMatrix.growth_rate.expense_ratio },
+                            { x: 'Growth Rate', y: 'Growth Rate', v: 1.0 }
+                        ],
+                        backgroundColor: function(ctx) {
+                            const value = ctx.raw.v;
+                            const alpha = Math.abs(value) * 0.8 + 0.2;
+                            if (value > 0) {
+                                return `rgba(220, 53, 69, ${alpha})`;
+                            } else if (value < 0) {
+                                return `rgba(46, 134, 171, ${alpha})`;
+                            } else {
+                                return `rgba(255, 255, 255, ${alpha})`;
+                            }
+                        },
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'category',
+                            labels: ['Loss Ratio', 'Expense Ratio', 'Growth Rate']
+                        },
+                        y: {
+                            type: 'category',
+                            labels: ['Loss Ratio', 'Expense Ratio', 'Growth Rate']
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Correlation: ' + context.raw.v.toFixed(2);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize all sections
+        document.addEventListener('DOMContentLoaded', function() {
+            populateExecutiveSummary();
+            populateBIMetrics();
+            populateClaimsDevelopment();
+            populateCustomerAnalytics();
+            populateCorrelationMatrix();
+        });
+    </script>
+</head>
+<body></body>
+</html>
